@@ -60,12 +60,15 @@ inline auto TestRendering()
 			ImGui::End();
 		});
 
-		auto Light = world.SpawnActor<PointLightActor>("Light");
-		world.TickFunction = [&, Light](float DeltaTime, World& world) {
+		auto TopLight = world.SpawnActor<PointLightActor>("TopLight");
+		auto BottomLight = world.SpawnActor<PointLightActor>("BottomLight");
+
+		world.TickFunction = [&, TopLight, BottomLight](float DeltaTime, World& world) {
 			if(LightMotion) {
 				static float TotalTime = 0;
 				TotalTime += DeltaTime * 2.f;
-				Light->SetTranslation({cos(TotalTime), sin(TotalTime), 1});
+				TopLight->SetTranslation({cos(TotalTime), sin(TotalTime), 1});
+				BottomLight->SetTranslation({cos(TotalTime), sin(TotalTime), -1.5});
 			}
 		};
 	};
