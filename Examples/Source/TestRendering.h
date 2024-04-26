@@ -23,8 +23,8 @@ inline auto TestRendering()
 		auto Camera = world.SpawnActor<CameraActor>("MainCamera");
 		Camera->SetTranslation({-5, 0, 0});
 
-		auto Cow = StaticMesh::LoadFromObj(Path("spot.obj"));
-		Cow->Normlize();
+		auto Bunny = StaticMesh::LoadFromObj(Path("stanford-bunny.obj"));
+		Bunny->Normlize();
 
 		// auto Cow = BasicShapesLibrary::GenerateSphere(0.5);
 
@@ -32,7 +32,7 @@ inline auto TestRendering()
 			BasicShapesLibrary::GenerateSphere(0.04f));
 		Ball->SetTranslation({0., 0., 1.});
 
-		auto CowActor = world.SpawnActor<StaticMeshActor>("Cow", Cow);
+		auto CowActor = world.SpawnActor<StaticMeshActor>("Bunny", Bunny);
 		CowActor->SetTranslation({0, 0, -0.1});
 		CowActor->SetRotation({M_PI_2, 0., 0.});
 
