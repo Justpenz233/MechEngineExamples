@@ -15,5 +15,4 @@ add_subdirectory(Engine)
 
 add_executable(ExampleMain main.cpp)
 target_link_libraries(ExampleMain PUBLIC MechEngineEditor)
-target_link_libraries(ExampleMain INTERFACE MechEngineExamples)
 target_compile_definitions(ExampleMain PRIVATE "PROJECT_DIR=\"${USER_PROJECT_ROOT_DIR}\"")
