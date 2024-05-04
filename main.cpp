@@ -1,3 +1,4 @@
+#include "BezierCurveExample.h"
 #include "Editor.h"
 #include "TestRendering.h"
 // Project DIR,use as the root of the project
