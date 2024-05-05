@@ -1,5 +1,5 @@
-#include "BezierCurveExample.h"
 #include "Editor.h"
+#include "SphericalLinkageExample.h"
 #include "TestRendering.h"
 // Project DIR,use as the root of the project
 #ifndef PROJECT_DIR
