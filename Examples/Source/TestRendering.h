@@ -26,15 +26,13 @@ inline auto TestRendering()
 		auto Bunny = StaticMesh::LoadFromObj(Path("stanford-bunny.obj"));
 		Bunny->Normlize();
 
-		// auto Cow = BasicShapesLibrary::GenerateSphere(0.5);
-
 		auto Ball = world.SpawnActor<StaticMeshActor>("Point",
 			BasicShapesLibrary::GenerateSphere(0.04f));
 		Ball->SetTranslation({0., 0., 1.});
 
-		auto CowActor = world.SpawnActor<StaticMeshActor>("Bunny", Bunny);
-		CowActor->SetTranslation({0, 0, -0.1});
-		CowActor->SetRotation({M_PI_2, 0., 0.});
+		auto BunnyActor = world.SpawnActor<StaticMeshActor>("Bunny", Bunny);
+		BunnyActor->SetTranslation({0, 0, -0.1});
+		BunnyActor->SetRotation({M_PI_2, 0., 0.});
 
 		static bool LightMotion = true;
 		world.AddWidget<LambdaUIWidget>([=]() {

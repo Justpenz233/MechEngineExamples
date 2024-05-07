@@ -16,16 +16,18 @@
 #include "Components/ConstPointLightComponent.h"
 #include "Game/StaticMeshActor.h"
 #include "Game/World.h"
+#include "Math/Math.h"
 #include "Mechanisms/SpatialJoints.h"
 #include "Mesh/BasicShapesLibrary.h"
 #include "Mechanisms/ClosedChainIKSolver.h"
+#include "Mechanisms/SphericalLinkage.h"
 
-
-inline auto CalcJointTransform (const FVector& Translation)
+inline auto CalcJointTransform (const FVector& Translation, double Radius = 1.f)
 {
     // Z axis head to the origin
-    FQuat Rotation = FQuat::FromTwoVectors(FVector(0, 0, 1), -Translation);
-    return FTransform(Translation, Rotation);
+	FVector Location = Translation.normalized() * Radius;
+    FQuat Rotation = FQuat::FromTwoVectors(FVector(0, 0, 1), -Location);
+    return FTransform(Location, Rotation);
 }
 
 /**
@@ -43,7 +45,7 @@ inline auto TransformByPoint(const FVector& Point,const FVector& Axis, double Ar
     return rotation2 * Axis.normalized();
 }
 
-inline TArray<FVector> ReadTargetTrajectory(Path TrajectoryFilePath)
+inline TArray<FVector> ReadTargetTrajectory(const Path& TrajectoryFilePath)
 {
 	std::fstream InFile(TrajectoryFilePath, std::ios::in);
 	if (!InFile.is_open())
@@ -56,9 +58,24 @@ inline TArray<FVector> ReadTargetTrajectory(Path TrajectoryFilePath)
 	{
 		double x,y,z,w;
 		InFile >> x >> y >> z >> w;
-		Result.emplace_back(x, -y, z);
+		Result.emplace_back(x, y, z);
 	}
 	return Result;
+}
+
+inline void WriteSimulationToFile(const TArray<FVector>& Trajectory, const Path& OutputFilePath)
+{
+	std::fstream OutFile(OutputFilePath, std::ios::out);
+	if (!OutFile.is_open())
+	{
+		LOG_ERROR("Failed to open file: {}", OutputFilePath.string());
+		return;
+	}
+	for (int i = 0;i < Trajectory.size();i ++)
+	{
+		FVector NormalPoint = Trajectory[i].normalized();
+		OutFile << NormalPoint.x() << " " << NormalPoint.x() << " " << NormalPoint.z() << " " << i << std::endl;
+	}
 }
 
 inline auto SphericalLinkageExample()
@@ -88,31 +105,27 @@ inline auto SphericalLinkageExample()
 
         auto Sphere = world.SpawnActor<StaticMeshActor>("Sphere", BasicShapesLibrary::GenerateSphere(R));
 
-    	auto Trajectory = world.SpawnActor<CurveActor>("Trajectory",
-    		ReadTargetTrajectory(Path::ProjectContentDir() / "SphericalLinkageTrajectory.txt"));
-    	Trajectory->GetCurveComponent()->SetRadius(0.001f);
-
-        FVector JointAPos(R, 0, 0);
-        auto JointA = world.SpawnActor<SpatialJointActor>("A", 'R', CalcJointTransform(JointAPos));
+        FVector JointAPos = FVector(1, 0, 0).normalized();
+        auto JointA = world.SpawnActor<SphericalLinkageActor>("A", CalcJointTransform(JointAPos, 1.f + SphericalLinkageComponent::Thickness), true);
     	JointA->GetJointComponent()->SetColor({1.f, 0.f, 0.f});
 
         FVector JointDPos = TransformByPoint(FVector(0, 1, 0),JointAPos, ξ, θx);
-        auto JointD = world.SpawnActor<SpatialJointActor>("D", 'R', CalcJointTransform(JointDPos));
+        auto JointD = world.SpawnActor<SphericalLinkageActor>("D", CalcJointTransform(JointDPos, 1.f - SphericalLinkageComponent::Thickness));
     	JointD->GetJointComponent()->SetColor({0.8f, 0.8f, 0.8f});
 
         FVector JointBPos = TransformByPoint(JointDPos, JointAPos, α, θ1);
-        auto JointB = world.SpawnActor<SpatialJointActor>("B", 'R', CalcJointTransform(JointBPos));
+        auto JointB = world.SpawnActor<SphericalLinkageActor>("B",  CalcJointTransform(JointBPos, 1.f));
     	JointB->GetJointComponent()->SetColor({0.f, 1.f, 0.f});
 
         FVector JointCPos = TransformByPoint(JointBPos, JointDPos, β, -CalcAngleBDC(JointBPos, JointDPos));
-        auto JointC = world.SpawnActor<SpatialJointActor>("C", 'R', CalcJointTransform(JointCPos));
+        auto JointC = world.SpawnActor<SphericalLinkageActor>("C",  CalcJointTransform(JointCPos, 1.f + SphericalLinkageComponent::Thickness));
     	JointC->GetJointComponent()->SetColor({0.f, 0.f, 1.f});
 
         FVector JointPPos = TransformByPoint(JointCPos, JointBPos, θp0, θp);
         auto JointP = world.SpawnActor<SpatialJointActor>("P", 'E', CalcJointTransform(JointPPos));
 
-        FVector JointQPos = TransformByPoint(JointBPos, JointPPos, 0.5, μpq);
-        auto JointQ = world.SpawnActor<SpatialJointActor>("Q", 'E', CalcJointTransform(JointQPos));
+        // FVector JointQPos = TransformByPoint(JointBPos, JointPPos, 0.5, μpq);
+        // auto JointQ = world.SpawnActor<SpatialJointActor>("Q", 'E', CalcJointTransform(JointQPos));
 
         JointA->GetJointComponent()->GetIKJoint()->SetIsRoot(true);
         JointA->AddNextJoint(JointB);
@@ -125,7 +138,17 @@ inline auto SphericalLinkageExample()
 	     auto Controller =
 	         world.SpawnActor<IKController<ClosedChainIKSolver>>("Controller");
 	     Controller->AddTranslationGlobal({0,0,100});
-	     Controller->AddJoints({JointA, JointB, JointC, JointD});
+	     Controller->AddJoints({JointA, JointB, JointC, JointD, JointP});
 	     Controller->Run();
+
+    	auto SimTrajectory = Controller->GetSimulatedTrajectory(JointP->GetJointComponent().get(), 361,
+    		[](Joint* Root) {
+    			Root->GlobalTransform.AddRotationLocal(MMath::QuaternionFromEulerXYZ(DegToRad(FVector(0, 0, 1))));
+    	});
+
+    	auto Trajectory = world.SpawnActor<CurveActor>("Trajectory", SimTrajectory);
+    	Trajectory->GetCurveComponent()->SetRadius(0.001f);
+
+    	WriteSimulationToFile(SimTrajectory, Path::ProjectContentDir() / "OutputTrajectory.txt");
     };
 }
