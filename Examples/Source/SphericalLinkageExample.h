@@ -10,6 +10,7 @@
  ************************************************************************************/
 
 #pragma once
+#include "LambdaUIWidget.h"
 #include "Actors/CameraActor.h"
 #include "Actors/CurveActor.h"
 #include "Animation/IKController.h"
@@ -21,6 +22,8 @@
 #include "Mesh/BasicShapesLibrary.h"
 #include "Mechanisms/ClosedChainIKSolver.h"
 #include "Mechanisms/SphericalLinkage.h"
+#include "Widgets/OsDialogs.h"
+#include "ImguiPlus.h"
 
 inline auto CalcJointTransform (const FVector& Translation, double Radius = 1.f)
 {
@@ -74,7 +77,29 @@ inline void WriteSimulationToFile(const TArray<FVector>& Trajectory, const Path&
 	for (int i = 0;i < Trajectory.size();i ++)
 	{
 		FVector NormalPoint = Trajectory[i].normalized();
-		OutFile << NormalPoint.x() << " " << NormalPoint.x() << " " << NormalPoint.z() << " " << i << std::endl;
+		OutFile << NormalPoint.x() << " " << NormalPoint.y() << " " << NormalPoint.z() << " " << i << std::endl;
+	}
+}
+
+inline void WriteJointMotionToFile(const TArray<FTransform>& Motions, const Path& OutputFilePath)
+{
+	std::fstream OutFile(OutputFilePath, std::ios::out);
+	if (!OutFile.is_open())
+	{
+		LOG_ERROR("Failed to open file: {}", OutputFilePath.string());
+		return;
+	}
+	for (int i = 0;i < Motions.size();i ++)
+	{
+		auto Matrix = Motions[i].GetMatrix();
+		for (int Row = 0; Row < 4; Row ++)
+		{
+			for (int Col = 0; Col < 4; Col ++)
+			{
+				OutFile << Matrix(Row, Col) << " ";
+			}
+		}
+		OutFile << "\n";
 	}
 }
 
@@ -103,14 +128,14 @@ inline auto SphericalLinkageExample()
         Camera->SetTranslation({5, 2, 0}); Camera->LookAt();
         Camera->AddComponent<ConstPointLightComponent>()->SetIntensity(2.5);
 
-        auto Sphere = world.SpawnActor<StaticMeshActor>("Sphere", BasicShapesLibrary::GenerateSphere(R));
+        auto Sphere = world.SpawnActor<StaticMeshActor>("Sphere", BasicShapesLibrary::GenerateSphere(R, 128));
 
         FVector JointAPos = FVector(1, 0, 0).normalized();
-        auto JointA = world.SpawnActor<SphericalLinkageActor>("A", CalcJointTransform(JointAPos, 1.f + SphericalLinkageComponent::Thickness), true);
+        auto JointA = world.SpawnActor<SphericalLinkageActor>("A", CalcJointTransform(JointAPos, 1.f - SphericalLinkageComponent::Thickness), true);
     	JointA->GetJointComponent()->SetColor({1.f, 0.f, 0.f});
 
         FVector JointDPos = TransformByPoint(FVector(0, 1, 0),JointAPos, ξ, θx);
-        auto JointD = world.SpawnActor<SphericalLinkageActor>("D", CalcJointTransform(JointDPos, 1.f - SphericalLinkageComponent::Thickness));
+        auto JointD = world.SpawnActor<SphericalLinkageActor>("D", CalcJointTransform(JointDPos, 1.f - SphericalLinkageComponent::Thickness * 2.f));
     	JointD->GetJointComponent()->SetColor({0.8f, 0.8f, 0.8f});
 
         FVector JointBPos = TransformByPoint(JointDPos, JointAPos, α, θ1);
@@ -118,14 +143,14 @@ inline auto SphericalLinkageExample()
     	JointB->GetJointComponent()->SetColor({0.f, 1.f, 0.f});
 
         FVector JointCPos = TransformByPoint(JointBPos, JointDPos, β, -CalcAngleBDC(JointBPos, JointDPos));
-        auto JointC = world.SpawnActor<SphericalLinkageActor>("C",  CalcJointTransform(JointCPos, 1.f + SphericalLinkageComponent::Thickness));
+        auto JointC = world.SpawnActor<SphericalLinkageActor>("C",  CalcJointTransform(JointCPos, 1.f - SphericalLinkageComponent::Thickness));
     	JointC->GetJointComponent()->SetColor({0.f, 0.f, 1.f});
 
         FVector JointPPos = TransformByPoint(JointCPos, JointBPos, θp0, θp);
         auto JointP = world.SpawnActor<SpatialJointActor>("P", 'E', CalcJointTransform(JointPPos));
 
-        // FVector JointQPos = TransformByPoint(JointBPos, JointPPos, 0.5, μpq);
-        // auto JointQ = world.SpawnActor<SpatialJointActor>("Q", 'E', CalcJointTransform(JointQPos));
+        FVector JointQPos = TransformByPoint(JointBPos, JointPPos, 0.5, μpq);
+        auto JointQ = world.SpawnActor<SpatialJointActor>("Q", 'E', CalcJointTransform(JointQPos));
 
         JointA->GetJointComponent()->GetIKJoint()->SetIsRoot(true);
         JointA->AddNextJoint(JointB);
@@ -141,14 +166,37 @@ inline auto SphericalLinkageExample()
 	     Controller->AddJoints({JointA, JointB, JointC, JointD, JointP});
 	     Controller->Run();
 
-    	auto SimTrajectory = Controller->GetSimulatedTrajectory(JointP->GetJointComponent().get(), 361,
+    	auto SimulatedSequence = Controller->GetSimulatedTrajectory(JointP->GetJointComponent().get(), 361,
     		[](Joint* Root) {
     			Root->GlobalTransform.AddRotationLocal(MMath::QuaternionFromEulerXYZ(DegToRad(FVector(0, 0, 1))));
     	});
 
-    	auto Trajectory = world.SpawnActor<CurveActor>("Trajectory", SimTrajectory);
+    	auto Trajectory = world.SpawnActor<CurveActor>("Trajectory", SimulatedSequence.Trajectory);
     	Trajectory->GetCurveComponent()->SetRadius(0.001f);
 
-    	WriteSimulationToFile(SimTrajectory, Path::ProjectContentDir() / "OutputTrajectory.txt");
+    	world.AddWidget<LambdaUIWidget>([=, &world]()  {
+    		ImGui::Begin("Export Mechanism");
+
+			if(ImGui::Button("Export motion and mesh"))
+			{
+				auto ExportFolderPath = SelectFolderDialog("Select export folder", Path::ProjectContentDir());
+				WriteSimulationToFile(SimulatedSequence.Trajectory, Path::ProjectContentDir() / "OutputTrajectory.txt");
+				Path ExportFolder = ExportFolderPath.result();
+				Path ModelFolder = ExportFolder / "Model";
+				Path::CreateDirectory(ModelFolder);
+				Path MotionFolder = ExportFolder / "Motion";
+				Path::CreateDirectory(MotionFolder);
+				JointA->GetJointComponent()->GetMeshData()->SaveOBJ(ModelFolder / "A.obj");
+				JointB->GetJointComponent()->GetMeshData()->SaveOBJ(ModelFolder / "B.obj");
+				JointC->GetJointComponent()->GetMeshData()->SaveOBJ(ModelFolder / "C.obj");
+				JointD->GetJointComponent()->GetMeshData()->SaveOBJ(ModelFolder / "D.obj");
+				WriteJointMotionToFile(SimulatedSequence.JointTransforms.at(JointA->GetJointComponent()->GetJoint().get()), MotionFolder / "A.pmt");
+				WriteJointMotionToFile(SimulatedSequence.JointTransforms.at(JointB->GetJointComponent()->GetJoint().get()), MotionFolder / "B.pmt");
+				WriteJointMotionToFile(SimulatedSequence.JointTransforms.at(JointC->GetJointComponent()->GetJoint().get()), MotionFolder / "C.pmt");
+				WriteJointMotionToFile(SimulatedSequence.JointTransforms.at(JointD->GetJointComponent()->GetJoint().get()), MotionFolder / "D.pmt");
+			}
+    		ImGui::End();
+    	});
+
     };
 }

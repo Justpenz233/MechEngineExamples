@@ -22,6 +22,7 @@ inline auto TestRendering()
 	return [](World& world) {
 		auto Camera = world.SpawnActor<CameraActor>("MainCamera");
 		Camera->SetTranslation({-5, 0, 0});
+		Camera->LookAt({0,0,0});
 
 		auto Bunny = StaticMesh::LoadFromObj(Path("stanford-bunny.obj"));
 		Bunny->Normlize();
@@ -35,7 +36,7 @@ inline auto TestRendering()
 		BunnyActor->SetRotation({M_PI_2, 0., 0.});
 
 		static bool LightMotion = true;
-		world.AddWidget<LambdaUIWidget>([=]() {
+		world.AddWidget<LambdaUIWidget>([=, &world]() {
 			auto NormalClipSpace = Camera->GetCameraComponent()->Project(Ball->GetTranslation());
 			auto UnprojectPos = Camera->GetCameraComponent()->UnProject(NormalClipSpace);
 			ImGui::Begin("Test");
