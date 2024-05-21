@@ -148,6 +148,7 @@ inline auto SphericalLinkageExample()
 
         FVector JointPPos = TransformByPoint(JointCPos, JointBPos, θp0, θp);
         auto JointP = world.SpawnActor<SpatialJointActor>("P", 'E', CalcJointTransform(JointPPos));
+    	Cast<EffectorJoint>(JointP->GetJointComponent())->Radius = 0.01;
 
         FVector JointQPos = TransformByPoint(JointBPos, JointPPos, 0.5, μpq);
         auto JointQ = world.SpawnActor<SpatialJointActor>("Q", 'E', CalcJointTransform(JointQPos));
