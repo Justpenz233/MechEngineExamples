@@ -2,6 +2,7 @@
 #include "DebugDrawExample.h"
 #include "CurveExample.h"
 #include "Editor.h"
+#include "MeshNormalExample.h"
 #include "SphericalLinkageExample.h"
 #include "TestRendering.h"
 // Project DIR,use as the root of the project
@@ -12,6 +13,6 @@
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(DebugDrawExample());
+    GEditor.LoadWorld(MeshNormalExample());
     GEditor.Start();
 }
