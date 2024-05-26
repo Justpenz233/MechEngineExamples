@@ -12,23 +12,20 @@ inline auto DebugDrawExample()
 {
 	return
 	[](World& world) {
-		auto BoxActor = world.SpawnActor<StaticMeshActor>("Box", BasicShapesLibrary::GenerateCuboid(FVector::Constant(8.0)));
+		auto BoxActor = world.SpawnActor<StaticMeshActor>("Box", BasicShapesLibrary::GenerateCuboid(FVector::Constant(1.0)));
 
-		world.DebugDrawCube(FVector::Zero(), FVector::Constant(8.0), RGB(255, 0, 0), 2);
-		// Build the cube box lines with 12 lines
-		// LineComponent->AddLine(FVector(-4, -4, -4), FVector(4, -4, -4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(-4, -4, -4), FVector(-4, 4, -4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(-4, -4, -4), FVector(-4, -4, 4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(4, 4, 4), FVector(-4, 4, 4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(4, 4, 4), FVector(4, -4, 4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(4, 4, 4), FVector(4, 4, -4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(-4, 4, 4), FVector(-4, -4, 4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(-4, 4, 4), FVector(-4, 4, -4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(4, -4, 4), FVector(-4, -4, 4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(4, -4, 4), FVector(4, -4, -4), RGB(255, 0, 0), 2);
-		// LineComponent->AddLine(FVector(4, -4, -4), FVector(-4, -4, -4), RGB(255, 0, 0), 2);
+		// Draw cube
+		world.DebugDrawCube(FVector::Zero(), FVector::Constant(1.0), RGB(255, 0, 0), 2);
 
+		// Draw point at center
 		world.DebugDrawPoint(FVector(0, 0, 0), 20, RGB(0, 255, 0));
 
+		auto BBox = BoxActor->GetStaticMeshComponent()->GetMeshData()->GetBoundingBox();
+
+		// Draw vertices
+		for (const auto& Vertex : BBox.GetVertex())
+		{
+			world.DebugDrawPoint(Vertex, 10, RGB(0, 255, 0));
+		}
 	};
 }
