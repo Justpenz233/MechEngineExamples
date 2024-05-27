@@ -18,11 +18,11 @@ inline auto ParametricMeshExamples()
     return [](World& World)
     {
         auto Camera = World.SpawnActor<CameraActor>("MainCamera");
-        Camera->SetTranslation({-5, 0, 0});
+        Camera->SetTranslation({-5, 0, 0}); Camera->LookAt();
 
         auto Surface = World.SpawnActor<ParametricMeshActor>("ParametrizationSurface", StaticMesh::LoadFromObj(Path("openbunny.obj")));
-        auto BunnyUVIndicator = World.SpawnActor<StaticMeshActor>("BunnyUVIndicator", BasicShapesLibrary::GenerateSphere(0.003, 16));
-        BunnyUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->BaseColor = {1, 0, 0};
+        auto BunnyUVIndicator = World.SpawnActor<StaticMeshActor>("BunnyUVIndicator", BasicShapesLibrary::GenerateSphere(0.003, 64));
+        BunnyUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});
         World.AddWidget<LambdaUIWidget>([Surface, BunnyUVIndicator]() {
             ImGui::Begin("Parametrization Example", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
             static float UV[2] = {0, 0};
@@ -41,8 +41,8 @@ inline auto ParametricMeshExamples()
         });
 
         auto Surface2 = World.SpawnActor<ParametricMeshActor>("ParametrizationSurface", "Catenoid"); Surface2->SetScale({0.1, 0.1, 0.1});
-        auto CatenoidUVIndicator = World.SpawnActor<StaticMeshActor>("CatenoidUVIndicator", BasicShapesLibrary::GenerateSphere(0.005, 16));
-        CatenoidUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->BaseColor = {1, 0, 0};
+        auto CatenoidUVIndicator = World.SpawnActor<StaticMeshActor>("CatenoidUVIndicator", BasicShapesLibrary::GenerateSphere(0.005, 64));
+        CatenoidUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});
 
         Surface2->SetTranslation({0.5, 0, 0});
         World.AddWidget<LambdaUIWidget>([Surface2, CatenoidUVIndicator]() {

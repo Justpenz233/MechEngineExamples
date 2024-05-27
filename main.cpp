@@ -4,6 +4,7 @@
 #include "Editor.h"
 #include "MeshBooleanTest.h"
 #include "MeshNormalExample.h"
+#include "ParametricMeshExamples.h"
 #include "SphericalLinkageExample.h"
 #include "TestRendering.h"
 // Project DIR,use as the root of the project
@@ -14,6 +15,6 @@
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(BasicShapesExample());
+    GEditor.LoadWorld(ParametricMeshExamples());
     GEditor.Start();
 }
