@@ -3,8 +3,11 @@
 //
 
 #pragma once
+#include "Actors/CurveActor.h"
 #include "Game/World.h"
 #include "Materials/Material.h"
+
+#include <tinysplinecxx.h>
 
 inline auto CurveExample()
 {

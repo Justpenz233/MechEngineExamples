@@ -1,7 +1,8 @@
-#include "BSplineExample.h"
+#include "BasicShapesExample.h"
 #include "DebugDrawExample.h"
 #include "CurveExample.h"
 #include "Editor.h"
+#include "MeshBooleanTest.h"
 #include "MeshNormalExample.h"
 #include "SphericalLinkageExample.h"
 #include "TestRendering.h"
@@ -13,6 +14,6 @@
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(DebugDrawExample());
+    GEditor.LoadWorld(BasicShapesExample());
     GEditor.Start();
 }

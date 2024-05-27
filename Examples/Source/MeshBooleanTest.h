@@ -3,25 +3,23 @@
 //
 
 #pragma once
-
-#include "Path.h"
 #include "Core/CoreMinimal.h"
 #include "Game/StaticMeshActor.h"
 #include "Game/World.h"
 #include "Mesh/BasicShapesLibrary.h"
 #include "Mesh/MeshBoolean.h"
 
-inline void MeshBooleanTestMain()
+inline auto MeshBooleanTest()
 {
-	GWorld.InitScript = [](World& World, class ImGuiPlugin* UIManager)
+	return [](World& World)
 	{
 
 		ObjectPtr<StaticMesh> Mesh1 = BasicShapesLibrary::GenerateCylinder(1., 0.5);
-		ObjectPtr<StaticMesh> Mesh2 = BasicShapesLibrary::GenerateSphere(0.505);
+		ObjectPtr<StaticMesh> Mesh2 = BasicShapesLibrary::GenerateSphere(0.5);
 		Mesh2->Translate({0,0,0.5});
 		ObjectPtr<StaticMesh> MeshR1 = MeshBoolean::MeshUnion(Mesh1, Mesh2);
-		MeshR1->SaveOBJ(Path::LogPath() / "1.obj");
 		ObjectPtr<StaticMesh> MeshR2 = MeshBoolean::MeshMinus(Mesh1, Mesh2);
+		ObjectPtr<StaticMesh> MeshR3 = MeshBoolean::MeshConnect(Mesh1, Mesh2);
 
 
 		auto Cylinder = World.SpawnActor<StaticMeshActor>("Mesh1");
@@ -29,15 +27,21 @@ inline void MeshBooleanTestMain()
 
 		auto Sphere = World.SpawnActor<StaticMeshActor>("Mesh2");
 		Sphere->GetStaticMeshComponent()->SetMeshData(Mesh2);
-		Sphere->SetTranslation({0,0,0.5});
+
+		auto Result2 = World.SpawnActor<StaticMeshActor>("ResultMinus");
+		Result2->GetStaticMeshComponent()->SetMeshData(MeshR2);
+		Result2->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetShowWireframe(true);
+		Result2->SetTranslation({0.,-2.,0.});
 
 		auto Result = World.SpawnActor<StaticMeshActor>("ResultUnion");
 		Result->GetStaticMeshComponent()->SetMeshData(MeshR1);
-		Result->SetTranslation({0.,2.,0.});
+		Result->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetShowWireframe(true);
+		Result->SetTranslation({0.,0.,-2.});
 
+		auto Result3 = World.SpawnActor<StaticMeshActor>("ResultConnect");
+		Result3->GetStaticMeshComponent()->SetMeshData(MeshR3);
+		Result3->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetShowWireframe(true);
+		Result3->SetTranslation({0.,0.,2.});
 
-		// auto Result2 = World.SpawnActor<StaticMeshActor>("ResultSub");
-		// Result2->GetStaticMeshComponent()->SetMeshData(MeshR2);
-		// Result2->SetTranslation({0.,-2.,0.});
 	};
 }
