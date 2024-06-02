@@ -20,7 +20,7 @@ inline auto ParametricMeshExamples()
         auto Camera = World.SpawnActor<CameraActor>("MainCamera");
         Camera->SetTranslation({-5, 0, 0}); Camera->LookAt();
 
-        auto Surface = World.SpawnActor<ParametricMeshActor>("ParametrizationSurface", StaticMesh::LoadFromObj(Path("openbunny.obj")));
+        auto Surface = World.SpawnActor<ParametricMeshActor>("ParametrizationSurface", StaticMesh::LoadObj(Path("openbunny.obj")));
         auto BunnyUVIndicator = World.SpawnActor<StaticMeshActor>("BunnyUVIndicator", BasicShapesLibrary::GenerateSphere(0.003, 64));
         BunnyUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});
         World.AddWidget<LambdaUIWidget>([Surface, BunnyUVIndicator]() {

@@ -24,7 +24,7 @@ inline auto TestRendering()
 		Camera->SetTranslation({-5, 0, 0});
 		Camera->LookAt({0,0,0});
 
-		auto Bunny = StaticMesh::LoadFromObj(Path("stanford-bunny.obj"));
+		auto Bunny = StaticMesh::LoadObj(Path("stanford-bunny.obj"));
 		Bunny->Normlize();
 
 		auto Ball = world.SpawnActor<StaticMeshActor>("Point",
