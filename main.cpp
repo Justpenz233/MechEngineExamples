@@ -7,6 +7,8 @@
 #include "ParametricMeshExamples.h"
 #include "SphericalLinkageExample.h"
 #include "TestRendering.h"
+#include "WireFrameMaterialExample.h"
+#include "SplineExample.h"
 // Project DIR,use as the root of the project
 #ifndef PROJECT_DIR
 #define PROJECT_DIR ""
@@ -15,6 +17,6 @@
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(TestRendering());
+    GEditor.LoadWorld(SplineExample());
     GEditor.Start();
 }
