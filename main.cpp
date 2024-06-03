@@ -15,11 +15,11 @@
 #include "TestRendering.h"
 #include "WireFrameMaterialExample.h" // This example demonstrates how to create a wireframe material and use alpha blending material
 #include "SplineExample.h"			  // This example demonstrates how to create a spline mesh
-#include "IntersectionExample.h"	      // This example demonstrates how to use the intersection functions
-
+#include "IntersectionExample.h"	  // This example demonstrates how to use the intersection functions
+#include "ConvexHullExample.h"		  // This example demonstrates how to use the convex hull function for 3D mesh
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(IntersectionExample());
+    GEditor.LoadWorld(ConvexHullExample());
     GEditor.Start();
 }
