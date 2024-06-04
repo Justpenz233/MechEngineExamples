@@ -17,9 +17,10 @@
 #include "SplineExample.h"			  // This example demonstrates how to create a spline mesh
 #include "IntersectionExample.h"	  // This example demonstrates how to use the intersection functions
 #include "ConvexHullExample.h"		  // This example demonstrates how to use the convex hull function for 3D mesh
+#include "MetaDataExample.h"	      // This example demonstrates how to use the metadata system, e.g. reflection system in Editor
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(ConvexHullExample());
+    GEditor.LoadWorld(MetaDataExample());
     GEditor.Start();
 }
