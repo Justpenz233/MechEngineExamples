@@ -18,9 +18,10 @@
 #include "IntersectionExample.h"	  // This example demonstrates how to use the intersection functions
 #include "ConvexHullExample.h"		  // This example demonstrates how to use the convex hull function for 3D mesh
 #include "MetaDataExample.h"	      // This example demonstrates how to use the metadata system, e.g. reflection system in Editor
+#include "ProjectToSurfaceExample.h"  // This example demonstrates how to project a 3D point to 2D paramtric surface
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(ParametricMeshExamples());
+    GEditor.LoadWorld(ProjectToSurfaceExample());
     GEditor.Start();
 }
