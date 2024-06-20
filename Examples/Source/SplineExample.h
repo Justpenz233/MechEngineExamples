@@ -33,6 +33,12 @@ inline auto SplineExample()
 				world.DebugDrawPoint(FVector{Pos.x(), Pos.y(), Pos.z()}, 20, FVector{0, 1, 0});
 				world.DebugDrawLine(FVector{Pos.x(), Pos.y(), Pos.z()}, FVector{Normal.x(), Normal.y(), Normal.z()}, FVector{1, 0, 0}, 1.5);
 			}
+
+			auto SimpleSample = Spline.sample(20);
+			for(int i = 0; i < SimpleSample.size(); i += 3)
+			{
+				world.DebugDrawPoint(FVector{SimpleSample[i], SimpleSample[i + 1], SimpleSample[i + 2]}, 20, FVector{1, 0, 0});
+			}
 		}
 
 		{// 2D curve
@@ -60,7 +66,11 @@ inline auto SplineExample()
 				world.DebugDrawPoint(FVector{Pos.x(), Pos.y(), Pos.z()}, 20, FVector{0, 1, 0});
 				world.DebugDrawLine(FVector{Pos.x(), Pos.y(), Pos.z()}, FVector{Normal.x(), Normal.y(), Normal.z()}, FVector{1, 0, 0}, 1.5);
 			}
-
+			auto SimpleSample = Spline.sample(20);
+			for(int i = 0; i < SimpleSample.size(); i += 2)
+			{
+				world.DebugDrawPoint(FVector{SimpleSample[i], SimpleSample[i + 1], 0}, 20, FVector{1, 0, 0});
+			}
 		}
 	};
 }

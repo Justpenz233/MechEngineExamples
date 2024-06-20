@@ -15,7 +15,8 @@
 inline auto ProjectToSurfaceExample()
 {
 	return [](World& World) {
-		auto Surface1 = World.SpawnActor<ParametricMeshActor>("Cone", "Catenoid");
+		// auto Surface1 = World.SpawnActor<ParametricMeshActor>("Cone", "Catenoid");
+		auto Surface1 = World.SpawnActor<ParametricMeshActor>("Spot", StaticMesh::LoadObj("Spot.obj"), SphereicalConformal);
 		Surface1->GetParametricMeshComponent()->GetMeshData()->GetMaterial()->SetAlpha(0.4);
 
 		auto TargetPoint = World.SpawnActor<StaticMeshActor>("3D Point", BasicShapesLibrary::GenerateSphere(0.02));

@@ -41,7 +41,7 @@ inline auto ParametricMeshExamples()
             ImGui::End();
         });
 
-        auto Surface2 = World.SpawnActor<ParametricMeshActor>("ParametrizationSurface", "Catenoid"); Surface2->SetScale({0.5, 0.5, 0.5});
+        auto Surface2 = World.SpawnActor<ParametricMeshActor>("ParametrizationSurface", NewObject<CatenoidSurface>()); Surface2->SetScale({0.5, 0.5, 0.5});
         auto CatenoidUVIndicator = World.SpawnActor<StaticMeshActor>("CatenoidUVIndicator", BasicShapesLibrary::GenerateSphere(0.05, 64));
         CatenoidUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});
 
