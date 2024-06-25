@@ -17,13 +17,13 @@
 #include "SplineExample.h"			  // This example demonstrates how to create a spline mesh
 #include "IntersectionExample.h"	  // This example demonstrates how to use the intersection functions
 #include "ConvexHullExample.h"		  // This example demonstrates how to use the convex hull function for 3D mesh
-#include "ExtrudeMeshExample.h"		  // This example demonstrates how to extrude a mesh, either offset along normal or scale
 #include "MetaDataExample.h"	      // This example demonstrates how to use the metadata system, e.g. reflection system in Editor
 #include "ProjectToSurfaceExample.h"  // This example demonstrates how to project a 3D point to 2D paramtric surface
 #include "BuiltinSurfaces.h"		  // This example shows all the built-in parametric surfaces in the engine(can be sampled by (U, V,thickness))
+#include "ExtrusionCurve.h" 		 //  This example demonstrates how to extrude a curve by a 2d simple Contour. For example, a torus can be created by extruding a circle along a circle.
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(BuiltinSurfaces());
+    GEditor.LoadWorld(ExtrusionCurve());
     GEditor.Start();
 }
