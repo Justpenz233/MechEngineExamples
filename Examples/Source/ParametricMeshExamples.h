@@ -12,7 +12,28 @@
 #include "Mesh/BasicShapesLibrary.h"
 #include "Misc/Path.h"
 
-#pragma once
+
+/****************************************************************************************
+ * ParametricMeshExamples
+ *
+ * [[AI GENERATED]]
+ * This function demonstrates how to use the ParametricMeshActor to create a parametric
+ * mesh with different parametrization methods. The function creates a bunny mesh and a
+ * catenoid mesh, and allows the user to interact with the meshes by changing the UV
+ * coordinates. The function also creates a spot mesh with a spherical conformal
+ * parametrization method, and allows the user to interact with the mesh by changing the
+ * UV coordinates.
+ * The UV coordinates can be changed by dragging the sliders in the ImGui window.
+ *
+ *
+ * Methods of parametrization:
+ * 1. SCAF Parametrization Method will provide a conformal map with a circular boundary. Guarantee global injective. Require an open mesh.
+ * 2. BoxBorderConformal Parametrization Method will provide a conformal map with a box boundary. Guarantee global injective. Require an open mesh.
+ * 3. SphereicalConformal Parametrization Method will provide a conformal map with a spherical boundary. Guarantee global injective. Require a closed mesh with genus 0, overlapping free.
+ * 4. Directly math defined parametric surface. See more at ParametricSurface.h
+ ****************************************************************************************/
+
+
 inline auto ParametricMeshExamples()
 {
     return [](World& World)
@@ -20,7 +41,7 @@ inline auto ParametricMeshExamples()
         auto Camera = World.SpawnActor<CameraActor>("MainCamera");
         Camera->SetTranslation({-5, 0, 0}); Camera->LookAt();
 
-        auto Surface = World.SpawnActor<ParametricMeshActor>("Bunny_SCAF", StaticMesh::LoadObj(Path("openbunny.obj"))->Normlized(), SCAF);
+        auto Surface = World.SpawnActor<ParametricMeshActor>("Bunny_SCAF", StaticMesh::LoadObj(Path("openbunny.obj"))->Normlized(), BoxBorderConformal);
     	Surface->SetTranslation({0,2,0});
         auto BunnyUVIndicator = World.SpawnActor<StaticMeshActor>("BunnyUVIndicator", BasicShapesLibrary::GenerateSphere(0.03, 64));
         BunnyUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});
