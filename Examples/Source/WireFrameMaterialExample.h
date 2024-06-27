@@ -19,7 +19,7 @@ inline auto WireFrameMaterialExample()
 			->GetStaticMeshComponent()->GetMeshData()->GetMaterial();
 		CubeMaterial->SetShowWireframe(true); CubeMaterial->SetAlpha(0.4f);
 
-		world.SpawnActor<StaticMeshActor>("Rabit", StaticMesh::LoadObj("stanford-bunny.obj")->Normlized());
+		world.SpawnActor<StaticMeshActor>("Rabit", StaticMesh::LoadObj("stanford-bunny.obj")->Normalized());
 
 	};
 }

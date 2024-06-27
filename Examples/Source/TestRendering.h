@@ -25,7 +25,7 @@ inline auto TestRendering()
 		Camera->LookAt({0,0,0});
 
 		auto Bunny = StaticMesh::LoadObj(Path("stanford-bunny.obj"));
-		Bunny->Normlize();
+		Bunny->Normalize();
 
 		auto Ball = world.SpawnActor<StaticMeshActor>("Point",
 			BasicShapesLibrary::GenerateSphere(0.04f));
