@@ -41,7 +41,7 @@ inline auto ParametricMeshExamples()
         auto Camera = World.SpawnActor<CameraActor>("MainCamera");
         Camera->SetTranslation({-5, 0, 0}); Camera->LookAt();
 
-        auto Surface = World.SpawnActor<ParametricMeshActor>("Bunny_SCAF", StaticMesh::LoadObj(Path("openbunny.obj"))->Normlized(), BoxBorderConformal);
+        auto Surface = World.SpawnActor<ParametricMeshActor>("Bunny_SCAF", StaticMesh::LoadObj(Path("openbunny.obj"))->Normalize()->GetThis<StaticMesh>(), BoxBorderConformal);
     	Surface->SetTranslation({0,2,0});
         auto BunnyUVIndicator = World.SpawnActor<StaticMeshActor>("BunnyUVIndicator", BasicShapesLibrary::GenerateSphere(0.03, 64));
         BunnyUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});
@@ -85,7 +85,7 @@ inline auto ParametricMeshExamples()
         });
 
 
-    	auto Spot = World.SpawnActor<ParametricMeshActor>("Spot_SphereicalConformal", StaticMesh::LoadObj(Path("spot.obj"))->Normlized(), SphereicalConformal);
+    	auto Spot = World.SpawnActor<ParametricMeshActor>("Spot_SphereicalConformal", StaticMesh::LoadObj(Path("spot.obj"))->Normalize()->GetThis<StaticMesh>(), SphereicalConformal);
     	Spot->SetTranslation({0, -2, 0}); Spot->SetRotation({M_PI *0.5, 0, 0});
     	auto SpotUVIndicator = World.SpawnActor<StaticMeshActor>("BunnyUVIndicator", BasicShapesLibrary::GenerateSphere(0.03, 64));
     	SpotUVIndicator->GetStaticMeshComponent()->GetMeshData()->GetMaterial()->SetBaseColor({1, 0, 0});

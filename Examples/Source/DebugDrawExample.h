@@ -27,5 +27,8 @@ inline auto DebugDrawExample()
 		{
 			world.DebugDrawPoint(Vertex, 10, RGB(0, 255, 0));
 		}
+
+		// Super long line, test clipping and culling
+		world.DebugDrawLine(FVector{-20,-20,-20}, FVector{20,20,20}, RGB(0, 0, 0), 2);
 	};
 }
