@@ -6,6 +6,7 @@
 #include "Components/LinesComponent.h"
 #include "Game/StaticMeshActor.h"
 #include "Game/World.h"
+#include "Math/Random.h"
 #include "Mesh/BasicShapesLibrary.h"
 
 inline auto DebugDrawExample()
@@ -29,6 +30,11 @@ inline auto DebugDrawExample()
 		}
 
 		// Super long line, test clipping and culling
-		world.DebugDrawLine(FVector{-20,-20,-20}, FVector{20,20,20}, RGB(0, 0, 0), 2);
+		// When turn off cliping, this will result crash.
+		for(int i = 0;i < 1000;i ++)
+		{
+			FVector Start = Random::RandomFVector() * 50;
+			world.DebugDrawLine(-1. * Start, Start, RGB(0, 0, 0), 2);
+		}
 	};
 }
