@@ -1,0 +1,102 @@
+name: build-cmake
+
+on: [ push, pull_request ]
+
+jobs:
+  build-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu ]
+        compiler:
+          - { name: gcc, version: 13 }
+          - { name: clang, version: 17 }
+        config: [ Release, Debug ]
+    name: ${{ matrix.os }} / ${{ matrix.config }} / ${{ matrix.compiler.name }}-${{ matrix.compiler.version }}
+    runs-on: [ self-hosted, x64, linux ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: "Configure and Build"
+        run: |
+          if [ "${{ matrix.compiler.name }}" = "gcc" ]; then
+            export LUISA_CC=gcc-${{ matrix.compiler.version }}
+            export LUISA_CXX=g++-${{ matrix.compiler.version }}
+            export LUISA_FLAGS=""
+          else
+            export LUISA_CC=clang-${{ matrix.compiler.version }}
+            export LUISA_CXX=clang++-${{ matrix.compiler.version }}
+            export LUISA_FLAGS="-stdlib=libc++"
+          fi
+          cmake -S . -B build -G Ninja -D LUISA_COMPUTE_ENABLE_RUST=OFF -D LUISA_COMPUTE_ENABLE_REMOTE=OFF -D LUISA_COMPUTE_ENABLE_CPU=OFF -D CMAKE_BUILD_TYPE=${{ matrix.config }} -D CMAKE_C_COMPILER=${LUISA_CC} -D CMAKE_CXX_COMPILER=${LUISA_CXX} -D CMAKE_CXX_FLAGS="${LUISA_FLAGS}"
+          cmake --build build -j 16
+      - name: "Install"
+        run: |
+          if [ "${{ matrix.config }}" = "Release" ]; then
+            cmake --install build --prefix dist -v
+          fi
+
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos ]
+        compiler: [ homebrew-clang, system-clang ]
+        config: [ Release, Debug ]
+    name: ${{ matrix.os }} / ${{ matrix.config }} / ${{ matrix.compiler }}
+    runs-on: [ self-hosted, macos, arm64 ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: "Configure and Build"
+        run: |
+          if [ "${{ matrix.compiler }}" = "homebrew-clang" ]; then
+            export PATH=/usr/local/opt/llvm/bin:$PATH
+          fi
+          cmake -S . -B build -G Ninja -D LUISA_COMPUTE_ENABLE_RUST=OFF -D LUISA_COMPUTE_ENABLE_REMOTE=OFF -D LUISA_COMPUTE_ENABLE_CPU=OFF -D CMAKE_BUILD_TYPE=${{ matrix.config }} -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D LUISA_COMPUTE_ENABLE_UNITY_BUILD=OFF
+          cmake --build build
+      - name: "Install"
+        run: |
+          if [ "${{ matrix.config }}" = "Release" ]; then
+            cmake --install build --prefix dist -v
+          fi
+
+  build-windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 2022 ]
+        config: [ Release, Debug ]
+        compiler: [ cl, clang, clang-cl ]
+    name: windows / ${{ matrix.config }} / ${{ matrix.compiler }}
+    runs-on: [ self-hosted, windows, x64 ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: "Setup Ninja"
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.11.1
+      - name: "Configure and Build"
+        shell: cmd
+        # FIXME: use native CMake scripts to download the SDKs
+        run: |
+          xmake lua setup.lua ../luisa_compute_sdks ../luisa_compute_sdks/cmake
+          call "C:\Program Files\Microsoft Visual Studio\${{ matrix.os }}\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+          cmake --version
+          ninja --version
+          IF "${{ matrix.compiler }}" == "clang" (
+            set CC=clang
+            set CXX=clang++
+          ) ELSE (
+            set CC=${{ matrix.compiler }}
+            set CXX=${{ matrix.compiler }}
+          )
+          cmake -S . -G Ninja -B build -D LUISA_COMPUTE_ENABLE_RUST=OFF -D LUISA_COMPUTE_ENABLE_REMOTE=OFF -D LUISA_COMPUTE_DX_SDK_DIR=../luisa_compute_sdks/cmake -D LUISA_COMPUTE_ENABLE_CPU=OFF -D CMAKE_BUILD_TYPE=${{ matrix.config }}
+          cmake --build build -v
+      - name: "Install"
+        run: |
+          cmake --install build --prefix dist -v
