@@ -22,7 +22,6 @@
 #include "Mesh/BasicShapesLibrary.h"
 #include "Mechanisms/ClosedChainIKSolver.h"
 #include "Mechanisms/SphericalLinkage.h"
-#include "Widgets/OsDialogs.h"
 #include "ImguiPlus.h"
 
 inline auto CalcJointTransform (const FVector& Translation, double Radius = 1.f)
