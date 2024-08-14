@@ -161,7 +161,7 @@ inline auto SphericalLinkageExample()
     	// JointP->AddNextJoint(JointQ);
 
 	     auto Controller =
-	         world.SpawnActor<IKController<ClosedChainIKSolver>>("Controller");
+	         world.SpawnActor<IKController>("Controller", NewObject<ClosedChainIKSolver>());
 	     Controller->AddTranslationGlobal({0,0,100});
 	     Controller->AddJoints({JointA, JointB, JointC, JointD, JointP});
 	     Controller->Run();

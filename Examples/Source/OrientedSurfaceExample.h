@@ -22,6 +22,18 @@ public:
 		return SurfaceComponent->Inside(GetFTransform().ToLocalSpace(Point));
 	}
 
+	double SignedDistance(const FVector& Point) const
+	{
+		ASSERT(SurfaceComponent != nullptr);
+		return SurfaceComponent->SignedDistance(GetFTransform().ToLocalSpace(Point));
+	}
+
+	double Distance(const FVector& Point) const
+	{
+		ASSERT(SurfaceComponent != nullptr);
+		return SurfaceComponent->Distance(GetFTransform().ToLocalSpace(Point));
+	}
+
 	StaticMeshComponent* GetMeshComponent() const
 	{
 		return MeshComponent;
@@ -49,10 +61,12 @@ inline auto OrientedSurfaceExample()
 		world.AddWidget<LambdaUIWidget>([Indicator, OrientedSurface]() {
 			if(ImGui::Begin("Orientation Surface Example"))
 			{
-				if(OrientedSurface->IsInside(Indicator->GetLocation()))
+				double SF = OrientedSurface->SignedDistance(Indicator->GetLocation());
+				if(SF < 0)
 					ImGui::Text("Inside");
 				else
 					ImGui::Text("Outside");
+				ImGui::Text("Distance: %f", SF);
 				ImGui::End();
 			}
 		});
