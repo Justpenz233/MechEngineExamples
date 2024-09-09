@@ -10,6 +10,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+# Global definitions based on build type
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DME_BUILD_DEBUG)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_definitions(-DME_BUILD_RELEASE)
+elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    add_definitions(-DME_BUILD_RELWITHDEBINFO)
+endif()
+
 add_subdirectory(Examples)
 add_subdirectory(Engine)
 
