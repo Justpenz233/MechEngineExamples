@@ -23,9 +23,10 @@
 #include "ExtrusionCurve.h" 		 //  This example demonstrates how to extrude a curve by a 2d simple Contour. For example, a torus can be created by extruding a circle along a circle.
 #include "SolidifyMeshExample.h".    // This example demonstrates how to solidify a mesh by given thickness
 #include "OrientedSurfaceExample.h"
+#include "CustomShaderExample.h"
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(OrientedSurfaceExample());
+    GEditor.LoadWorld(CustomShaderExample());
     GEditor.Start();
 }
