@@ -15,15 +15,22 @@
 inline auto ProjectToSurfaceExample()
 {
 	return [](World& World) {
-		// auto Surface1 = World.SpawnActor<ParametricMeshActor>("Cone", "Catenoid");
-		auto Surface1 = World.SpawnActor<ParametricMeshActor>("Spot", StaticMesh::LoadObj("Spot.obj"), SphereicalConformal);
-		Surface1->GetParametricMeshComponent()->GetMeshData()->GetMaterial()->SetAlpha(0.4);
+
+		// auto Surface = World.SpawnActor<ParametricMeshActor>("Spot", StaticMesh::LoadObj("Spot.obj"), SphereicalConformal);
+		// Surface->GetParametricMeshComponent()->GetMeshData()->GetMaterial()->SetAlpha(0.4);
+
+		auto Surface = World.SpawnActor<ParametricMeshActor>("OpenBunny", StaticMesh::LoadObj("openbunny.obj"), BoxBorderConformal);
+		Surface->SetScale(FVector::Constant(10.));
+		Surface->GetParametricMeshComponent()->GetMeshData()->GetMaterial()->SetAlpha(0.4);
+
+		// auto Surface = World.SpawnActor<ParametricMeshActor>("Cone", NewObject<ConeSurface>());
+		// Surface->GetParametricMeshComponent()->GetMeshData()->GetMaterial()->SetAlpha(0.4);
 
 		auto TargetPoint = World.SpawnActor<StaticMeshActor>("3D Point", BasicShapesLibrary::GenerateSphere(0.02));
 
 		auto ProjectPoint = World.SpawnActor<StaticMeshActor>("Projected Point", BasicShapesLibrary::GenerateSphere(0.02));
-		ProjectPoint->TickFunction = [TargetPoint, Surface1](double DeltaTime, Actor* actor) {
-			actor->SetTranslation(Surface1->Sample(Surface1->Projection(TargetPoint->GetTranslation())));
+		ProjectPoint->TickFunction = [TargetPoint, Surface](double DeltaTime, Actor* actor) {
+			actor->SetTranslation(Surface->Sample(Surface->Projection(TargetPoint->GetTranslation())));
 		};
 	};
 }
