@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Actors/LightActor.h"
 
 inline auto CornellBox()
 {
@@ -22,13 +23,21 @@ inline auto CornellBox()
 		world.SpawnActor<StaticMeshActor>("Floor", BasicShapesLibrary::GenerateCuboid(FVector{2, 2, 0.2}))
 		->SetTranslation(FVector{0, 0, 1});
 
-		world.SpawnActor<PointLightActor>("PointLight")->SetTranslation({0, 0, 0.6});
+		// auto Light = world.SpawnActor<PointLightActor>("PointLight");
+		// Light->SetTranslation({0, 0, 0.6});
+		// Light->GetPointLightComponent()->SetIntensity(3.);
 
-		world.SpawnActor<PointLightActor>("PointLight")->SetTranslation({0.4, 0, 0.6});
+
+		auto Light = world.SpawnActor<AreaLightActor>("AreaLight");
+		Light->SetTranslation({0, 0, 0.899});
+		Light->GetLightComponent()->SetSize({0.6, 0.6});
 
 
-		world.SpawnActor<StaticMeshActor>("Bunny", StaticMesh::LoadObj(Path("stanford-bunny.obj")))->SetScale(FVector::Constant(5.0))
-		->SetTranslation(FVector{0, 0, -1})->SetRotation(FVector{M_PI * 0.5, 0, 0});
+		// world.SpawnActor<StaticMeshActor>("Bunny", StaticMesh::LoadObj(Path("stanford-bunny.obj")))->SetScale(FVector::Constant(5.0))
+		// ->SetTranslation(FVector{0, 0, -1})->SetRotation(FVector{M_PI * 0.5, 0, 0});
+
+		world.SpawnActor<StaticMeshActor>("Cube", BasicShapesLibrary::GenerateCuboid(FVector::Constant(0.5)))
+		->SetTranslation(FVector{0,0,-0.5});
 
 	};
 }

@@ -29,6 +29,6 @@
 int main(int argc, char *argv[])
 {
     GEditor.Init(argv[0], PROJECT_DIR);
-    GEditor.LoadWorld(PointsOBB());
+    GEditor.LoadWorld(CornellBox());
     GEditor.Start();
 }
