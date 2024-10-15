@@ -19,9 +19,9 @@ class my_shader : public Rendering::disney_material
 
 class reverse_color_shader : public Rendering::disney_material
 {
-	virtual Float3 evaluate(const Rendering::material_parameters &material_data, const Rendering::ray_intersection &intersection, const Float3 &w_o, const Float3 &w_i) const override
+	virtual Float3 evaluate(const Rendering::material_parameters &material_data, const Float3 &w_o, const Float3 &w_i) const override
 	{
-	    auto color = Rendering::disney_material::evaluate(material_data, intersection, w_o, w_i);
+	    auto color = Rendering::disney_material::evaluate(material_data, w_o, w_i);
 	    return luisa::make_float3(1.f) - color;
 	}
 };

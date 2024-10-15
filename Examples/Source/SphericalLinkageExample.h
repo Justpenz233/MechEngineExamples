@@ -125,7 +125,7 @@ inline auto SphericalLinkageExample()
 
         auto Camera = world.SpawnActor<CameraActor>("MainCamera");
         Camera->SetTranslation({5, 2, 0}); Camera->LookAt();
-        Camera->AddComponent<ConstPointLightComponent>()->SetIntensity(2.5);
+        // Camera->AddComponent<ConstPointLightComponent>()->SetIntensity(2.5);
 
         auto Sphere = world.SpawnActor<StaticMeshActor>("Sphere", BasicShapesLibrary::GenerateSphere(R, 128));
 

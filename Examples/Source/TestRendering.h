@@ -7,7 +7,7 @@
 
 #include "LambdaUIWidget.h"
 #include "Actors/CameraActor.h"
-#include "Actors/PointLightActor.h"
+#include "Actors/LightActor.h"
 #include "Game/StaticMeshActor.h"
 #include "Game/World.h"
 #include "ImguiToggle/imgui_toggle.h"
