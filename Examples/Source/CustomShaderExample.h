@@ -3,7 +3,7 @@
 #include <luisa/luisa-compute.h>
 #include "Game/World.h"
 #include "Materials/Material.h"
-#include "Render/GPUSceneInterface.h"
+#include "Render/GpuSceneInterface.h"
 #include "Render/material/disney_material.h"
 
 using luisa::compute::Float3;
@@ -19,11 +19,12 @@ class my_shader : public Rendering::disney_material
 
 class reverse_color_shader : public Rendering::disney_material
 {
-	virtual Float3 evaluate(const Rendering::material_parameters &material_data, const Float3 &w_o, const Float3 &w_i) const override
+	virtual Float3 evaluate(const Rendering::material_parameters& material_data, const Float3& w_o, const Float3& w_i) const override
 	{
-	    auto color = Rendering::disney_material::evaluate(material_data, w_o, w_i);
-	    return luisa::make_float3(1.f) - color;
+		auto color = Rendering::disney_material::evaluate(material_data, w_o, w_i);
+		return luisa::make_float3(1.f) - color;
 	}
+
 };
 
 inline auto CustomShaderExample()
