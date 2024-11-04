@@ -27,9 +27,9 @@ inline auto CornellBox()
 		auto BackWall = world.SpawnActor<StaticMeshActor>("BackWall", BasicShapesLibrary::GenerateCuboid(FVector{0.02, 2, 2.}));
 		BackWall->SetTranslation(FVector{1, 0, 1}); BackWall->GetMaterial()->SetBaseColor({0.725, 0.71, 0.68});
 
-		auto ShotBox = world.SpawnActor<StaticMeshActor>("ShotBox", BasicShapesLibrary::GenerateCuboid(FVector{0.594811, 0.6, 0.604394}));
-		ShotBox->SetTranslation(FVector{-0.328631, 0.374592, 0.3})->SetRotation(FVector{0, 0, DegToRad(-163.36)});
-		ShotBox->GetMaterial()->SetBaseColor({0.725, 0.71, 0.68});
+		auto ShortBox = world.SpawnActor<StaticMeshActor>("ShotBox", BasicShapesLibrary::GenerateCuboid(FVector{0.594811, 0.6, 0.604394}));
+		ShortBox->SetTranslation(FVector{-0.328631, 0.374592, 0.3})->SetRotation(FVector{0, 0, DegToRad(-163.36)});
+		ShortBox->GetMaterial()->SetBaseColor({0.725, 0.71, 0.68});
 
 		auto TallBox = world.SpawnActor<StaticMeshActor>("TallBox", BasicShapesLibrary::GenerateCuboid(FVector{0.607289, 0.597739, 1.2}));
 		TallBox->SetTranslation(FVector{0.335439, -0.291415, 0.6,})->SetRotation(FVector{0, 0, DegToRad(160.812)});
