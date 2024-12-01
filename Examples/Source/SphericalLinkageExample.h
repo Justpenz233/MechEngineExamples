@@ -14,7 +14,6 @@
 #include "Actors/CameraActor.h"
 #include "Actors/CurveActor.h"
 #include "Animation/IKController.h"
-#include "Components/ConstPointLightComponent.h"
 #include "Game/StaticMeshActor.h"
 #include "Game/World.h"
 #include "Math/Math.h"
