@@ -10,7 +10,7 @@
 #include "Actors/LightActor.h"
 #include "Game/StaticMeshActor.h"
 #include "Game/World.h"
-#include "ImguiToggle/imgui_toggle.h"
+#include "imgui_toggle/imgui_toggle.h"
 #include "Mesh/BasicShapesLibrary.h"
 #include "Mesh/StaticMesh.h"
 #include "Misc/Path.h"
