@@ -48,7 +48,7 @@ inline auto MetaDataExample()
 		auto Object = World.SpawnActor<MyCylinder>("MyCylinder");
 
 		// Iterate all properties
-		for(auto Property : Object->GetAllPropertyAceessors())
+		for(auto Property : Object->GetAllPropertyAccessors())
 		{
 			MechEngine::LOG_TEMP("Property type:{} name:{}", Property.getTypeName(), Property.getFieldName());
 			for (auto Tag : Property.GetPropertyTags())
