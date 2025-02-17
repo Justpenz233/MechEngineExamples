@@ -10,7 +10,7 @@ inline auto CornellBox()
 	return [](World& world)
 	{
 		auto Camera = world.SpawnActor<CameraActor>("MainCamera");
-		Camera->SetTranslation({-10.760, 0.162, 1}); Camera->GetCameraComponent()->SetFovH(19.5);
+		Camera->SetTranslation({-10.760, 0.5, 1}); Camera->GetCameraComponent()->SetFovH(19.5); Camera->LookAt(FVector{0, 0.5, 1});
 
 		auto LeftWall = world.SpawnActor<StaticMeshActor>("LeftWall", BasicShapesLibrary::GenerateCuboid(FVector{2., 0.02, 2.}));
 		LeftWall->SetTranslation(FVector{0, -1, 1}); LeftWall->GetMaterial()->SetBaseColor({0.63, 0.065, 0.05});
