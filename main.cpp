@@ -1,8 +1,4 @@
 // Project DIR,use as the root of the project
-#ifndef PROJECT_DIR
-#define PROJECT_DIR ""
-#endif
-
 #include "Editor.h"
 
 #include "BasicShapesExample.h"		 // This example demonstrates how to create baisc shapes as mesh
@@ -28,7 +24,7 @@
 #include "CornellBox.h"
 int main(int argc, char *argv[])
 {
-    GEditor.Init(argv[0], PROJECT_DIR);
+    GEditor.Init(argv[0]);
     GEditor.LoadWorld(CornellBox());
     GEditor.Start();
 }
