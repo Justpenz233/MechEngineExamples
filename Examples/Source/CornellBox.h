@@ -39,6 +39,6 @@ inline auto CornellBox()
 		auto Light = world.SpawnActor<AreaLightActor>("AreaLight");
 		Light->SetTranslation({-0.005, -0.03, 1.98});
 		Light->GetLightComponent()->SetSize({0.47, 0.38});
-		Light->GetLightComponent()->SetIntensity({17, 12, 4});
+		Light->GetLightComponent()->SetIntensity({170, 120, 40});
 	};
 }

@@ -1,6 +1,4 @@
-// Project DIR,use as the root of the project
 #include "Editor.h"
-
 #include "BasicShapesExample.h"		 // This example demonstrates how to create baisc shapes as mesh
 #include "DebugDrawExample.h"		 // This example demonstrates how to use the debug draw functions
 #include "CurveExample.h"			 // This example demonstrates how to create a curve as mesh
@@ -17,7 +15,7 @@
 #include "ProjectToSurfaceExample.h"  // This example demonstrates how to project a 3D point to 2D paramtric surface
 #include "BuiltinSurfaces.h"		  // This example shows all the built-in parametric surfaces in the engine(can be sampled by (U, V,thickness))
 #include "ExtrusionCurve.h" 		 //  This example demonstrates how to extrude a curve by a 2d simple Contour. For example, a torus can be created by extruding a circle along a circle.
-#include "SolidifyMeshExample.h".    // This example demonstrates how to solidify a mesh by given thickness
+#include "SolidifyMeshExample.h"    // This example demonstrates how to solidify a mesh by given thickness
 #include "OrientedSurfaceExample.h" // This example demonstrates how to create an oriented surface which provides signed distance function and projection function
 #include "CustomShaderExample.h" // This example demonstrates how to create a custom shader
 #include "PointsOBB.h"
